@@ -33,5 +33,12 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Stack />;
+  return (
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)" options={{ headerShown: true }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
+    </Stack>
+  );
 }
