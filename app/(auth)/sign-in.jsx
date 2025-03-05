@@ -1,6 +1,5 @@
 import { Text, View, ScrollView, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from 'expo-status-bar'
 import { images } from "@/constants";
 import React from 'react'
 import FormField from "@/components/FormField";
@@ -29,7 +28,7 @@ const SignIn = () => {
             className="w-[115px] h-[35px]"
             resizeMode="contain"
           />
-          <Text className="text-white text-2xl font-psemibold mt-10">Log in to Aora</Text>
+          <Text className="text-white text-2xl font-psemibold mt-10">Log in</Text>
           
           <FormField
             title="Email"
@@ -49,6 +48,12 @@ const SignIn = () => {
             secureTextEntry={true}
             placeholder="Enter your password"
             />
+            
+          <View className="w-full flex items-end mt-2">
+            <Link href="/forgot-password" className="text-sm font-psemibold text-gray-100">
+              Forgot password?
+            </Link>
+          </View>
 
           <CustomButton
             title="Sign in"
@@ -65,7 +70,7 @@ const SignIn = () => {
               href="/sign-up"
               className="text-lg font-psemibold text-secondary"
             >
-              Signup
+              Sign Up
             </Link>
           </View>
           

@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, Image } from "react-native";
+import { Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Redirect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,11 +8,11 @@ import CustomButton from "@/components/CustomButton";
 export default function Index() {
   return (
     <SafeAreaView className="bg-primary h-full">
-      <ScrollView contentContainerStyle={{ height: '100%' }}>
-        <View className="w-full flex flex-col items-center justify-center min-h-[85vh] px-4">
+      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+        <View className="w-full flex flex-col items-center px-4">
           <Image
             source={images.logo}
-            className="w-[130px] h-[84px] mt-8"
+            className="w-[130px] h-[84px]"
             resizeMode="contain"
           />
           <Image
