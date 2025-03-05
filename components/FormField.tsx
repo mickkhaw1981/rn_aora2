@@ -1,4 +1,4 @@
-import { Text, View, TextInput, TouchableOpacity, KeyboardTypeOptions, Image } from 'react-native'
+import { Text, View, TextInput, TouchableOpacity, KeyboardTypeOptions, Image, Platform, StyleSheet } from 'react-native'
 import React from 'react'
 import { useState } from 'react'
 import { icons } from '@/constants'
@@ -24,19 +24,25 @@ const FormField = ({
 }: FormFieldProps) => {
 
  const [showPassword, setShowPassword] = useState(false) 
+ const [isFocused, setIsFocused] = useState(false)
 
   return (
-    <View className={`space-y-2 ${otherStyles}`}>
-      <Text className="text-base text-gray-100 font-pmedium">{title}</Text>
+    <View className={`${otherStyles}`}>
+      <Text className="text-base text-gray-100 font-pmedium mb-[8px]">{title}</Text>
       
-      <View className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row items-center">
+      <View className={`w-full h-16 px-4 bg-black-100 rounded-2xl border-2 ${isFocused ? 'border-secondary' : 'border-black-200'} flex flex-row items-center`}>
         <TextInput
             className="flex-1 text-white font-psemibold text-base"
             value={value}
             placeholder={placeholder}
+            placeholderTextColor="#7B7B8B"
             onChangeText={handleChangeText}
             keyboardType={keyboardType}
             secureTextEntry={title === "Password" && !showPassword}
+            selectionColor="#FF9C01"
+            cursorColor="#FF9C01"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
         />
          {title === "Password" && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
@@ -52,6 +58,16 @@ const FormField = ({
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  inputContainer: {
+    borderWidth: 2,
+    borderColor: '#232533',
+  },
+  focusedInput: {
+    borderColor: '#FF9C01',
+  }
+});
 
 export default FormField
 
