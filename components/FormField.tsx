@@ -11,6 +11,7 @@ interface FormFieldProps {
   otherStyles?: string;
   keyboardType?: KeyboardTypeOptions;
   secureTextEntry?: boolean;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
 }
 
 const FormField = ({
@@ -20,11 +21,13 @@ const FormField = ({
   handleChangeText,
   otherStyles = "",
   keyboardType = "default",
-  secureTextEntry = false
+  secureTextEntry = false,
+  autoCapitalize = "sentences"
 }: FormFieldProps) => {
 
  const [showPassword, setShowPassword] = useState(false) 
  const [isFocused, setIsFocused] = useState(false)
+ const lowercaseTitle = title.toLowerCase()
 
   return (
     <View className={`${otherStyles}`}>
@@ -38,13 +41,14 @@ const FormField = ({
             placeholderTextColor="#7B7B8B"
             onChangeText={handleChangeText}
             keyboardType={keyboardType}
-            secureTextEntry={title === "Password" && !showPassword}
+            secureTextEntry={lowercaseTitle === "password" && !showPassword}
             selectionColor="#FF9C01"
             cursorColor="#FF9C01"
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
+            autoCapitalize={autoCapitalize}
         />
-         {title === "Password" && (
+         {lowercaseTitle === "password" && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Image
               source={!showPassword ? icons.eye : icons.eyeHide}

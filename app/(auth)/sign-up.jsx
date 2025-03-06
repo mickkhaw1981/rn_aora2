@@ -6,6 +6,9 @@ import FormField from "@/components/FormField";
 import { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import { Link } from "expo-router";
+import { createUser } from "@/lib/appwrite";
+import { router } from "expo-router";
+import { Alert } from "react-native";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -16,12 +19,23 @@ const SignUp = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submit = () => {
-    setIsSubmitting(true)
-    console.log(form)
-    setTimeout(() => {
-      setIsSubmitting(false)
-    }, 1000)
+  const submit = async () => {
+    //issue an alert if the form is not filled in
+    if (!form.username || !form.email || !form.password) {
+      Alert.alert("Error", "Please fill in all fields");
+    }
+
+    try {
+      const result = await createUser(form.email, form.password, form.username);
+      
+      //set it to global state...
+      router.replace("/home");
+
+      } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -42,6 +56,7 @@ const SignUp = () => {
             otherStyles="mt-7"
             keyboardType="default"
             placeholder="Enter your username"
+            autoCapitalize="none"
             />
 
           <FormField
@@ -51,6 +66,7 @@ const SignUp = () => {
             otherStyles="mt-7"
             keyboardType="email-address"
             placeholder="E.g. mike.khaw@gmail.com"
+            autoCapitalize="none"
             />
 
           <FormField

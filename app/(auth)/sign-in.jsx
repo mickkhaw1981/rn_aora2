@@ -1,11 +1,12 @@
-import { Text, View, ScrollView, Image } from "react-native";
+import { Text, View, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "@/constants";
 import React from 'react'
 import FormField from "@/components/FormField";
 import { useState } from "react";
 import CustomButton from "@/components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { signIn } from "@/lib/appwrite";
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -15,8 +16,23 @@ const SignIn = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submit = () => {
-    console.log(form)
+  const submit = async () => {
+    //issue an alert if the form is not filled in
+    if (!form.email || !form.password) {
+      Alert.alert("Error", "Please fill in all fields");
+    }
+
+    try {
+      await signIn(form.email, form.password);
+      
+      //set it to global state...
+      router.replace("/home");
+
+      } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -37,6 +53,7 @@ const SignIn = () => {
             otherStyles="mt-7"
             keyboardType="email-address"
             placeholder="E.g. mike.khaw@gmail.com"
+            autoCapitalize="none"
             />
 
           <FormField
