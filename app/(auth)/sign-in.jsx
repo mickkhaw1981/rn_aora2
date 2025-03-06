@@ -17,6 +17,8 @@ const SignIn = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // The AuthenticationGuard in _layout.jsx will handle redirection
+
   const submit = async () => {
     //issue an alert if the form is not filled in
     if (!form.email || !form.password) {

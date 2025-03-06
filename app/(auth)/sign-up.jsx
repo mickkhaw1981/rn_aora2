@@ -1,23 +1,35 @@
 import { Text, View, ScrollView, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "@/constants";
-import React from 'react'
+import React, { useEffect } from 'react'
 import FormField from "@/components/FormField";
 import { useState } from "react";
 import CustomButton from "@/components/CustomButton";
-import { Link } from "expo-router";
+import { Link, Redirect } from "expo-router";
 import { createUser } from "@/lib/appwrite";
 import { router } from "expo-router";
 import { Alert } from "react-native";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignUp = () => {
-  const { setUser, setIsLogged, checkSession } = useGlobalContext();
+  const { setUser, setIsLogged, checkSession, isLogged, loading } = useGlobalContext();
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
   });
+
+  // Redirect to home if already logged in
+  useEffect(() => {
+    if (isLogged && !loading) {
+      router.replace('/home');
+    }
+  }, [isLogged, loading]);
+
+  // Immediate redirect if already logged in
+  if (isLogged && !loading) {
+    return <Redirect href="/home" />;
+  }
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 

@@ -1,15 +1,41 @@
-import { Stack, SplashScreen } from "expo-router";
+import { Stack, SplashScreen, Redirect, useSegments, useRouter } from "expo-router";
 import "./global.css";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import GlobalProvider from "../context/GlobalProvider";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
-
-// Prevent the splash screen from auto-hiding before asset loading is complete. You're using this functionality to keep the splash screen visible until your fonts are loaded, ensuring a smooth user experience without showing unstyled content.
+// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+// This is a wrapper component that will redirect the user based on authentication state
+function AuthenticationGuard({ children }) {
+  const { isLogged, loading } = useGlobalContext();
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (loading) return; // Don't do anything while loading
+
+    const inAuthGroup = segments[0] === "(auth)";
+    const inTabsGroup = segments[0] === "(tabs)";
+    const isIndexPage = segments.length === 1 && segments[0] === "";
+
+    // If the user is not logged in and trying to access a protected route
+    if (!isLogged && inTabsGroup) {
+      router.replace("/");
+    }
+
+    // If the user is logged in and trying to access auth routes or index
+    if (isLogged && (inAuthGroup || isIndexPage)) {
+      router.replace("/home");
+    }
+  }, [isLogged, loading, segments]);
+
+  return children;
+}
+
 export default function RootLayout() {
-  
   const [fontsLoaded, error] = useFonts({
     "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
