@@ -9,8 +9,10 @@ import { Link } from "expo-router";
 import { createUser } from "@/lib/appwrite";
 import { router } from "expo-router";
 import { Alert } from "react-native";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignUp = () => {
+  const { setUser, setIsLogged, checkSession } = useGlobalContext();
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -23,15 +25,28 @@ const SignUp = () => {
     //issue an alert if the form is not filled in
     if (!form.username || !form.email || !form.password) {
       Alert.alert("Error", "Please fill in all fields");
+      return;
     }
 
+    setIsSubmitting(true);
+    
     try {
-      const result = await createUser(form.email, form.password, form.username);
+      // Check and clear any existing session before registration
+      const hasSession = await checkSession();
+      if (hasSession) {
+        // The createUser function will handle session deletion
+      }
       
-      //set it to global state...
+      const newUser = await createUser(form.email, form.password, form.username);
+      
+      if (newUser) {
+        setIsLogged(true);
+        setUser(newUser);
+      }
+      
       router.replace("/home");
 
-      } catch (error) {
+    } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
       setIsSubmitting(false);

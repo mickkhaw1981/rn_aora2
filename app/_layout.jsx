@@ -2,9 +2,10 @@ import { Stack, SplashScreen } from "expo-router";
 import "./global.css";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
+import GlobalProvider from "../context/GlobalProvider";
 
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+// Prevent the splash screen from auto-hiding before asset loading is complete. You're using this functionality to keep the splash screen visible until your fonts are loaded, ensuring a smooth user experience without showing unstyled content.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -34,11 +35,13 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
-    </Stack>
+    <GlobalProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
+      </Stack>
+    </GlobalProvider>
   );
 }

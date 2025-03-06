@@ -6,9 +6,10 @@ import FormField from "@/components/FormField";
 import { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
-import { signIn } from "@/lib/appwrite";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignIn = () => {
+  const { login } = useGlobalContext();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -20,15 +21,15 @@ const SignIn = () => {
     //issue an alert if the form is not filled in
     if (!form.email || !form.password) {
       Alert.alert("Error", "Please fill in all fields");
+      return;
     }
 
+    setIsSubmitting(true);
+    
     try {
-      await signIn(form.email, form.password);
-      
-      //set it to global state...
+      await login(form.email, form.password);
       router.replace("/home");
-
-      } catch (error) {
+    } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
       setIsSubmitting(false);
