@@ -9,34 +9,34 @@ import { Link, router } from "expo-router";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignIn = () => {
-  const { login } = useGlobalContext();
+  const { setUser, setIsLogged } = useGlobalContext();
+  const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // The AuthenticationGuard in _layout.jsx will handle redirection
-
   const submit = async () => {
-    //issue an alert if the form is not filled in
-    if (!form.email || !form.password) {
+    if (form.email === "" || form.password === "") {
       Alert.alert("Error", "Please fill in all fields");
-      return;
     }
 
-    setIsSubmitting(true);
-    
+    setSubmitting(true);
+
     try {
-      await login(form.email, form.password);
+      await signIn(form.email, form.password);
+      const result = await getCurrentUser();
+      setUser(result);
+      setIsLogged(true);
+
+      Alert.alert("Success", "User signed in successfully");
       router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
-  }
+  };
 
   return (
     <SafeAreaView className="h-full bg-primary">

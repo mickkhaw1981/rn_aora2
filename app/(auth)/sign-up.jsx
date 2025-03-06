@@ -12,58 +12,33 @@ import { Alert } from "react-native";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignUp = () => {
-  const { setUser, setIsLogged, checkSession, isLogged, loading } = useGlobalContext();
+  const { setUser, setIsLogged } = useGlobalContext();
+
+  const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
   });
 
-  // Redirect to home if already logged in
-  useEffect(() => {
-    if (isLogged && !loading) {
-      router.replace('/home');
-    }
-  }, [isLogged, loading]);
-
-  // Immediate redirect if already logged in
-  if (isLogged && !loading) {
-    return <Redirect href="/home" />;
-  }
-
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
   const submit = async () => {
-    //issue an alert if the form is not filled in
-    if (!form.username || !form.email || !form.password) {
+    if (form.username === "" || form.email === "" || form.password === "") {
       Alert.alert("Error", "Please fill in all fields");
-      return;
     }
 
-    setIsSubmitting(true);
-    
+    setSubmitting(true);
     try {
-      // Check and clear any existing session before registration
-      const hasSession = await checkSession();
-      if (hasSession) {
-        // The createUser function will handle session deletion
-      }
-      
-      const newUser = await createUser(form.email, form.password, form.username);
-      
-      if (newUser) {
-        setIsLogged(true);
-        setUser(newUser);
-      }
-      
-      router.replace("/home");
+      const result = await createUser(form.email, form.password, form.username);
+      setUser(result);
+      setIsLogged(true);
 
+      router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
-  }
+  };
 
   return (
     <SafeAreaView className="h-full bg-primary">

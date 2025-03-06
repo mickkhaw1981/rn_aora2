@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Client, Account, ID, Models, Databases, Avatars, Storage, Query } from 'react-native-appwrite';
+import { Client, Account, ID, Databases, Avatars, Storage, Query } from 'react-native-appwrite';
 
 export const config = {
     platform: "com.ntmk.aora",
@@ -68,7 +68,8 @@ export async function createUser(email: string, password: string, username: stri
 // Sign In - Simplified as most logic is now in GlobalProvider
 export async function signIn(email: string, password: string) {
     try {
-      return await account.createEmailPasswordSession(email, password);
+      const session = await account.createEmailPasswordSession(email, password);
+      return session; 
     } catch (error) {
       console.error("Sign in error:", error);
       throw new Error(error instanceof Error ? error.message : String(error));
@@ -94,7 +95,7 @@ export async function getCurrentUser() {
       const currentUser = await databases.listDocuments(
         config.databaseId!,
         config.usersCollectionId!,
-        [Query.equal("accountId", currentAccount.$id)]
+        [Query.equal("accountID", currentAccount.$id)]
       );
   
       if (!currentUser) throw Error;
@@ -109,9 +110,23 @@ export async function getCurrentUser() {
 // Sign Out - Simplified as most logic is now in GlobalProvider
 export async function signOut() {
   try {
-    return await account.deleteSession("current");
+    const session = await account.deleteSession("current");
+    return session;
   } catch (error) {
     console.error("Sign out error:", error);
     throw new Error(error instanceof Error ? error.message : String(error));
+  }
+}
+
+export const getAllPosts = async () => {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId!,
+      config.videosCollectionId!,
+    )
+    return posts.documents
+  } catch (error) {
+    console.log(error)
+    throw new Error(error instanceof Error ? error.message : String(error))
   }
 }
