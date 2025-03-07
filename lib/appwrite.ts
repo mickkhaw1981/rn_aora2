@@ -130,3 +130,17 @@ export const getAllPosts = async () => {
     throw new Error(error instanceof Error ? error.message : String(error))
   }
 }
+
+export const getLatestPosts = async () => {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId!,
+      config.videosCollectionId!,
+      [Query.orderDesc("$createdAt"), Query.limit(5)]
+    );
+    return posts.documents;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+}
