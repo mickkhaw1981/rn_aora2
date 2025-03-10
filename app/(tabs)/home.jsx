@@ -6,12 +6,13 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Search from '@/components/Search'
 import Trending from '@/components/Trending'
 import EmptyState from '@/components/EmptyState'
-import { getAllPosts } from '@/lib/appwrite'
+import { getAllPosts, getLatestPosts } from '@/lib/appwrite'
 import useAppwrite from '@/lib/useAppwrite'
 import VideoCard from '@/components/VideoCard'
 
 export default function Home() {
   const { data: posts, refetch } = useAppwrite(getAllPosts);
+  const { data: latestPosts } = useAppwrite(getLatestPosts);
 
   const [refreshing, setRefreshing] = useState(false)
   const onRefresh = async () => {
@@ -62,7 +63,7 @@ export default function Home() {
             {/* Latest video section */}
             <View className="w-full flex-1 pt-5 pb-8">
               <Text className="text-white text-base font-pregular mt-0.5">Trending Videos</Text>
-              <Trending posts={[ { id: 4}, { id: 5}, { id: 6} ?? []]} />
+              <Trending posts={ latestPosts ?? [] } />
             </View>
           </View>
         )}

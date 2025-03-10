@@ -2,20 +2,10 @@ import { useState } from "react";
 import { ResizeMode, Video } from "expo-av";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 
-import { icons } from '@/constants'
+import { icons } from "@/constants";
 
-interface VideoProps {
-  title: string;
-  thumbnail: string;
-  video: string;
-  creator: string;
-  avatar: string;
-}
-
-const VideoCard = ({ title, creator, avatar, thumbnail, video }: VideoProps) => {
+const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
   const [play, setPlay] = useState(false);
-  const [avatarError, setAvatarError] = useState(false);
-  const [thumbnailError, setThumbnailError] = useState(false);
 
   return (
     <View className="flex flex-col items-center px-4 mb-14">
@@ -26,7 +16,6 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }: VideoProps) => 
               source={{ uri: avatar }}
               className="w-full h-full rounded-lg"
               resizeMode="cover"
-              
             />
           </View>
 
@@ -35,13 +24,13 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }: VideoProps) => 
               className="font-psemibold text-sm text-white"
               numberOfLines={1}
             >
-              {title || "Untitled Video"}
+              {title}
             </Text>
             <Text
               className="text-xs text-gray-100 font-pregular"
               numberOfLines={1}
             >
-              {creator || "Unknown Creator"}
+              {creator}
             </Text>
           </View>
         </View>
@@ -51,7 +40,7 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }: VideoProps) => 
         </View>
       </View>
 
-      {play && video ? (
+      {play ? (
         <Video
           source={{ uri: video }}
           className="w-full h-60 rounded-xl mt-3"
@@ -59,7 +48,7 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }: VideoProps) => 
           useNativeControls
           shouldPlay
           onPlaybackStatusUpdate={(status) => {
-            if (status.isLoaded && status.didJustFinish) {
+            if (status.didJustFinish) {
               setPlay(false);
             }
           }}
@@ -67,23 +56,20 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }: VideoProps) => 
       ) : (
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => video && setPlay(true)}
+          onPress={() => setPlay(true)}
           className="w-full h-60 rounded-xl mt-3 relative flex justify-center items-center"
         >
           <Image
             source={{ uri: thumbnail }}
             className="w-full h-full rounded-xl mt-3"
             resizeMode="cover"
-            onError={() => setThumbnailError(true)}
           />
 
-          {video && (
-            <Image
-              source={icons.play}
-              className="w-12 h-12 absolute"
-              resizeMode="contain"
-            />
-          )}
+          <Image
+            source={icons.play}
+            className="w-12 h-12 absolute"
+            resizeMode="contain"
+          />
         </TouchableOpacity>
       )}
     </View>
