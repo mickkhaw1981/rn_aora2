@@ -158,3 +158,5 @@ export const searchPosts = async (query: string) => {
     throw new Error(error instanceof Error ? error.message : String(error));
   }
 }
+
+//export const getUserPosts for profile page

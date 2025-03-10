@@ -7,6 +7,7 @@ import { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import { signIn, getCurrentUser } from "@/lib/appwrite";
 
 const SignIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
