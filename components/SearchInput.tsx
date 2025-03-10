@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Image, Text } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, usePathname } from 'expo-router';
 
 import icons from '@/constants/icons';
 
@@ -9,7 +9,8 @@ interface SearchProps {
   onSearch?: (query: string) => void;
 }
 
-const Search = ({ placeholder = "Search...", onSearch }: SearchProps) => {
+const SearchInput = ({ placeholder = "Search...", onSearch }: SearchProps) => {
+  const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
@@ -29,9 +30,9 @@ const Search = ({ placeholder = "Search...", onSearch }: SearchProps) => {
       <TextInput
         className="flex-1 text-white font-pregular text-base"
         placeholder={placeholder}
-        placeholderTextColor="#9ca3af"
+        placeholderTextColor="#CDCDE0"
         value={searchQuery}
-        onChangeText={setSearchQuery}
+        onChangeText={ (e) => setSearchQuery(e) }
         onSubmitEditing={handleSearch}
       />
       <TouchableOpacity 
@@ -49,4 +50,4 @@ const Search = ({ placeholder = "Search...", onSearch }: SearchProps) => {
   );
 };
 
-export default Search; 
+export default SearchInput; 

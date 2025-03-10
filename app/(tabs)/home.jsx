@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'expo-router'
 import { images, icons } from '@/constants'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Search from '@/components/Search'
+import SearchInput from '@/components/SearchInput'
 import Trending from '@/components/Trending'
 import EmptyState from '@/components/EmptyState'
 import { getAllPosts, getLatestPosts } from '@/lib/appwrite'
@@ -58,7 +58,7 @@ export default function Home() {
               </View>
             </View>
 
-            <Search placeholder="Search for video topic..." />
+            <SearchInput placeholder="Search for video topic..." />
 
             {/* Latest video section */}
             <View className="w-full flex-1 pt-5 pb-8">
